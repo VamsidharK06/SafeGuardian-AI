@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeGuardian AI - Login</title>
+  <meta name="description" content="SafeGuardian AI - Login" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Manifest for PWA -->
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body data-page="login">
+
+  <!-- Navbar injected by app.js -->
+  <div id="navbar"></div>
+
+  <main class="page-container center-page">
+    <section class="card login-card">
+
+      <!-- App Branding -->
+      <div class="login-brand">
+        <div class="login-logo">🛡️</div>
+        <h1>SafeGuardian AI</h1>
+        <p class="subtitle">You're protected.</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="form-grid">
+        <div class="input-group">
+          <label for="username">👤 Username</label>
+          <input
+            type="text"
+            id="username"
+            placeholder="Enter your username"
+            autocomplete="username"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="password">🔒 Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn primary-btn full-width">
+          Login
+        </button>
+      </form>
+
+      <!-- Message area -->
+      <p id="loginMessage" class="message"></p>
+
+      <!-- Demo hint -->
+      <div class="info-box">
+        <strong>💡 Demo Mode:</strong> Enter any username and password to access the app. No registration required.
+      </div>
+
+    </section>
+  </main>
+  <footer>
+    <p>© 2026 SafeGuardian AI</p>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

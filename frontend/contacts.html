@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeGuardian AI - Emergency Contacts</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body data-page="contacts">
+
+  <div id="navbar"></div>
+
+  <main class="page-container">
+
+    <!-- Add Contact Form -->
+    <section class="card">
+      <h1>Emergency Contacts</h1>
+      <p>Set up your trusted contacts once (up to 5). They'll be notified automatically when you trigger SOS.</p>
+      <div id="contactsOfflineNotice" class="offline-notice">
+        ⚠️ Backend not reachable — contacts are being saved on this device only until the server is back online.
+      </div>
+
+      <hr class="divider" />
+
+      <form id="contactForm" class="form-grid">
+        <div class="input-group">
+          <label for="contactName">Name</label>
+          <input
+            type="text"
+            id="contactName"
+            placeholder="e.g. Amma"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="contactPhone">Phone</label>
+          <input
+            type="tel"
+            id="contactPhone"
+            placeholder="e.g. +91 9876543210"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="contactRelation">Relation</label>
+          <input
+            type="text"
+            id="contactRelation"
+            placeholder="e.g. Mother"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn primary-btn">
+          Add Contact
+        </button>
+      </form>
+
+      <p id="contactMessage" class="message"></p>
+    </section>
+
+    <!-- Saved Contacts List -->
+    <section class="card">
+      <h2>Saved Contacts</h2>
+      <hr class="divider" />
+
+      <ul id="contactsList" class="list"></ul>
+      <p id="emptyContactsText" class="empty-text">No contacts saved yet. Add your first contact above.</p>
+    </section>
+
+    <footer>
+      &copy; 2026 SafeGuardian AI
+    </footer>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeGuardian AI - Home</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body data-page="dashboard">
+
+  <div id="navbar"></div>
+
+  <main class="page-container center-page">
+
+    <section class="card home-card">
+      <div class="home-brand">
+        <div class="login-logo">🛡️</div>
+        <h1>SafeGuardian AI</h1>
+        <p id="welcomeUser" class="subtitle">You're protected.</p>
+      </div>
+
+      <a href="sos.html" class="sos-home-link" aria-label="Go to SOS">
+        <div class="sos-wrapper">
+          <div class="sos-btn-ring">
+            <div class="sos-ring"></div>
+            <div class="sos-ring"></div>
+            <div class="sos-ring"></div>
+            <span class="sos-main-btn">
+              SOS<br />
+              <span style="font-size:0.7rem; font-weight:400; letter-spacing:0.5px;">TAP FOR HELP</span>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <div class="home-status-row">
+        <div class="home-status">
+          <span class="home-status-label">Emergency Contacts</span>
+          <span class="home-status-value" id="stat-contacts">0</span>
+        </div>
+        <div class="home-status">
+          <span class="home-status-label">AI Status</span>
+          <span class="home-status-value">Ready</span>
+        </div>
+      </div>
+
+      <div class="home-links">
+        <a href="contacts.html" class="btn outline-btn">📋 Emergency Contacts</a>
+        <a href="ai.html" class="btn outline-btn">🤖 AI Safety Assistant</a>
+      </div>
+    </section>
+
+    <footer>
+      &copy; 2026 SafeGuardian AI
+    </footer>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

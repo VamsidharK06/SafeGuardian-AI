@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeGuardian AI - Safety Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body data-page="ai">
+
+  <div id="navbar"></div>
+
+  <main class="page-container">
+
+    <!-- Intro Card -->
+    <section class="card center-text">
+      <h1>AI Safety Assistant</h1>
+      <p>Describe what is happening in your own words and get a risk assessment with a recommended next step.</p>
+    </section>
+
+    <!-- Analyzer Card -->
+    <section class="card">
+      <form id="aiForm" class="form-grid">
+        <div class="input-group">
+          <label for="aiMessage">What's happening?</label>
+          <textarea
+            id="aiMessage"
+            placeholder="Example: Someone is following me and I feel unsafe..."
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" id="analyzeBtn" class="btn primary-btn">
+          Analyze
+        </button>
+      </form>
+
+      <p id="aiMessageStatus" class="message"></p>
+
+      <div id="aiResult" class="status-box" style="display:none;"></div>
+    </section>
+
+    <section class="card">
+      <p class="muted-text">
+        This is an automated first read of a situation, not a substitute for professional or
+        emergency help. In immediate danger, always call your local emergency number first.
+      </p>
+    </section>
+
+    <!-- Advanced Multimodal Analysis Card (camera + voice) -->
+    <section class="card">
+      <h2>Advanced Analysis (camera + voice)</h2>
+      <p class="muted-text">
+        Optionally add a photo and/or a short voice recording for a fuller assessment using
+        YOLOv11, MediaPipe, Whisper, and PyTorch, run by a separate AI service on your machine.
+        This works alongside the text box above — fill in whichever of text, photo, or voice
+        you have.
+      </p>
+
+      <div id="advancedOfflineNotice" class="offline-notice">
+        ⚠️ The advanced AI service isn't reachable at <code>http://localhost:8001</code>. Start
+        it (see <code>ai-service/README.md</code>) to use camera/voice analysis.
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Camera capture -->
+      <div class="capture-block">
+        <label>Photo (optional)</label>
+        <video id="cameraPreview" playsinline muted style="display:none;"></video>
+        <canvas id="cameraCanvas" style="display:none;"></canvas>
+        <img id="capturedPhotoPreview" alt="Captured photo" style="display:none;" />
+
+        <div class="button-row mt-8">
+          <button type="button" id="startCameraBtn" class="btn outline-btn small-btn">📷 Start Camera</button>
+          <button type="button" id="capturePhotoBtn" class="btn primary-btn small-btn" style="display:none;">Capture Photo</button>
+          <button type="button" id="retakePhotoBtn" class="btn outline-btn small-btn" style="display:none;">Retake</button>
+          <button type="button" id="removePhotoBtn" class="btn danger-btn small-btn" style="display:none;">Remove Photo</button>
+        </div>
+        <p id="cameraStatus" class="message"></p>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Voice capture -->
+      <div class="capture-block">
+        <label>Voice recording (optional)</label>
+        <audio id="voicePreview" controls style="display:none;"></audio>
+
+        <div class="button-row mt-8">
+          <button type="button" id="recordVoiceBtn" class="btn outline-btn small-btn">🎤 Record Voice</button>
+          <button type="button" id="removeVoiceBtn" class="btn danger-btn small-btn" style="display:none;">Remove Recording</button>
+        </div>
+        <p id="voiceStatus" class="message"></p>
+      </div>
+
+      <hr class="divider" />
+
+      <button type="button" id="advancedAnalyzeBtn" class="btn primary-btn full-width">
+        Run Advanced Analysis
+      </button>
+
+      <div id="advancedResult" class="status-box" style="display:none;"></div>
+    </section>
+
+    <footer>
+      &copy; 2026 SafeGuardian AI
+    </footer>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

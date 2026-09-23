@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeGuardian AI - SOS</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body data-page="sos">
+
+  <div id="navbar"></div>
+
+  <main class="page-container">
+
+    <!-- SOS Action Card -->
+    <section class="card center-text">
+      <h1>SOS Emergency Alert</h1>
+      <p>One tap — nothing else to do. This captures your current location plus a short camera and voice snapshot, runs a context-based AI assessment, and notifies every saved contact automatically.</p>
+
+      <hr class="divider" />
+
+      <!-- Animated SOS Button -->
+      <div class="sos-wrapper">
+        <div class="sos-btn-ring">
+          <div class="sos-ring"></div>
+          <div class="sos-ring"></div>
+          <div class="sos-ring"></div>
+          <button id="sendSOSBtn" class="sos-main-btn">
+            SOS<br />
+            <span style="font-size:0.7rem; font-weight:400; letter-spacing:0.5px;">SEND ALERT</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Status Result -->
+      <div id="sosStatus" class="status-box" style="display:none;"></div>
+    </section>
+
+    <!-- Saved Contacts Preview -->
+    <section class="card">
+      <h2>Will Be Notified</h2>
+      <hr class="divider" />
+      <ul id="sosSentList" class="list">
+        <!-- dynamically populated by JS -->
+      </ul>
+      <p id="sosEmptyText" class="empty-text">No contacts found. <a href="contacts.html">Add contacts →</a></p>
+    </section>
+
+    <!-- Honest status of automation -->
+    <section class="card">
+      <h2>How this works</h2>
+      <p class="muted-text">
+        Pressing SOS gets your current GPS location, tries to capture a short camera image and a
+        short voice clip (best-effort — SOS still proceeds if either isn't available), and sends
+        everything to the backend. The backend runs a context-based AI assessment, looks up every
+        saved contact, and sends each of them the emergency message, current location, and any
+        captured evidence through Twilio's WhatsApp Business API — automatically, with no browser
+        tabs and no manual "tap Send" step. If WhatsApp isn't configured on the server yet, or a
+        specific contact or evidence item can't be delivered, that's reported honestly rather than
+        claimed as sent.
+      </p>
+    </section>
+
+    <footer>
+      &copy; 2026 SafeGuardian AI
+    </footer>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

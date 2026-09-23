@@ -1,0 +1,19 @@
+# SafeGuardian AI Service - FastAPI service using YOLOv11, OpenCV, PyTorch,
+# Whisper, and MediaPipe. See README.md for setup and known limitations.
+
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+pydantic>=2.6
+
+# Computer vision
+ultralytics>=8.3.0       # YOLOv11
+opencv-python>=4.9.0.80  # OpenCV
+mediapipe>=0.10.14       # MediaPipe (pose/gesture) - uses the Tasks API (PoseLandmarker), not the older "Solutions" API
+
+# ML runtime + speech
+torch>=2.2.0
+torchvision>=0.17.0
+openai-whisper>=20231117 # Whisper (speech-to-text)
+
+numpy>=1.26
