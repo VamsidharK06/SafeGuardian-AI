@@ -1,0 +1,263 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+}
+
+
+/* ============================================
+   TOP BAR
+============================================ */
+
+.topbar {
+    background: #ffffff;
+
+    padding: 20px 40px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 1px solid #ddd;
+}
+
+.topbar h1 {
+    margin: 0;
+}
+
+.topbar p {
+    margin: 5px 0 0;
+    color: #666;
+}
+
+
+/* ============================================
+   DASHBOARD
+============================================ */
+
+.dashboard {
+    max-width: 900px;
+
+    margin: 30px auto;
+
+    padding: 0 20px;
+}
+
+
+/* ============================================
+   CARDS
+============================================ */
+
+.card,
+.sos-card {
+    background: white;
+
+    padding: 25px;
+
+    margin-bottom: 20px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.card h2,
+.sos-card h2 {
+    margin-top: 0;
+}
+
+
+/* ============================================
+   BUTTONS
+============================================ */
+
+button {
+    padding: 11px 18px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+}
+
+.logout-button {
+    background: #222;
+    color: white;
+}
+
+#addContactButton {
+    margin-top: 15px;
+
+    background: #222;
+    color: white;
+}
+
+
+/* ============================================
+   SOS
+============================================ */
+
+.sos-card {
+    text-align: center;
+
+    border: 2px solid #ddd;
+}
+
+.warning {
+    color: #666;
+}
+
+.sos-button {
+    width: 180px;
+    height: 180px;
+
+    border-radius: 50%;
+
+    background: #b00020;
+
+    color: white;
+
+    font-size: 42px;
+    font-weight: bold;
+
+    user-select: none;
+
+    transition: transform 0.1s;
+}
+
+.sos-button:active {
+    transform: scale(0.96);
+}
+
+.sos-button.holding {
+    transform: scale(0.95);
+}
+
+
+/* ============================================
+   CONTACTS
+============================================ */
+
+.contact {
+    padding: 15px;
+
+    margin-bottom: 10px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.contact-info strong {
+    display: block;
+}
+
+.contact-info span {
+    color: #666;
+}
+
+
+/* ============================================
+   ACTIVE SOS
+============================================ */
+
+#activeSosCard {
+    border: 2px solid #b00020;
+}
+
+#activeSosStatus {
+    color: #b00020;
+}
+
+
+/* ============================================
+   MODAL
+============================================ */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+
+    width: 400px;
+
+    max-width: 90%;
+
+    padding: 30px;
+
+    border-radius: 12px;
+}
+
+.modal-content label {
+    display: block;
+
+    margin-top: 15px;
+
+    margin-bottom: 5px;
+
+    font-weight: bold;
+}
+
+.modal-content input {
+    width: 100%;
+
+    padding: 10px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.modal-buttons button:first-child {
+    background: #222;
+
+    color: white;
+}
+
+.modal-buttons button:last-child {
+    background: #ddd;
+}
+
+
+/* ============================================
+   UTILITY
+============================================ */
+
+.hidden {
+    display: none !important;
+}

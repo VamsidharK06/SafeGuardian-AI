@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SafeGuardian Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="css/dashboard.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         TOP BAR
+    ========================================== -->
+
+    <header class="topbar">
+
+        <div>
+
+            <h1>SafeGuardian</h1>
+
+            <p>
+                Emergency Safety Dashboard
+            </p>
+
+        </div>
+
+
+        <button
+            id="logoutButton"
+            class="logout-button"
+        >
+            Logout
+        </button>
+
+    </header>
+
+
+
+    <!-- =========================================
+         DASHBOARD
+    ========================================== -->
+
+    <main class="dashboard">
+
+
+        <!-- =====================================
+             USER ACCOUNT
+        ====================================== -->
+
+        <section class="card">
+
+            <h2>My Account</h2>
+
+            <p>
+
+                Welcome,
+
+                <strong id="userName">
+                    Loading...
+                </strong>
+
+            </p>
+
+
+            <p id="userPhone"></p>
+
+            <p id="userEmail"></p>
+
+        </section>
+
+
+
+        <!-- =====================================
+             EMERGENCY CONTACTS
+        ====================================== -->
+
+        <section class="card">
+
+            <h2>
+                Emergency Contacts
+            </h2>
+
+
+            <div id="contactsList">
+
+                Loading contacts...
+
+            </div>
+
+
+            <button
+                id="addContactButton"
+            >
+                Add Emergency Contact
+            </button>
+
+        </section>
+
+
+
+        <!-- =====================================
+             SOS
+        ====================================== -->
+
+        <section class="sos-card">
+
+            <h2>
+                Emergency SOS
+            </h2>
+
+
+            <p class="warning">
+
+                Press and hold the button
+                for 3 seconds.
+
+            </p>
+
+
+            <button
+                id="sosButton"
+                class="sos-button"
+            >
+                SOS
+            </button>
+
+
+            <p id="sosStatus">
+
+                No active emergency
+
+            </p>
+
+        </section>
+
+
+
+        <!-- =====================================
+             LOCATION
+        ====================================== -->
+
+        <section class="card">
+
+            <h2>
+                Current Location
+            </h2>
+
+
+            <p>
+
+                Latitude:
+
+                <span id="latitude">
+                    Not available
+                </span>
+
+            </p>
+
+
+            <p>
+
+                Longitude:
+
+                <span id="longitude">
+                    Not available
+                </span>
+
+            </p>
+
+
+            <p>
+
+                Location status:
+
+                <span id="locationStatus">
+                    Waiting...
+                </span>
+
+            </p>
+
+        </section>
+
+
+
+        <!-- =====================================
+             ACTIVE SOS
+        ====================================== -->
+
+        <section
+            id="activeSosCard"
+            class="card hidden"
+        >
+
+            <h2>
+                Active SOS
+            </h2>
+
+
+            <p>
+
+                Status:
+
+                <strong id="activeSosStatus">
+                    ACTIVE
+                </strong>
+
+            </p>
+
+
+            <p>
+
+                Locality:
+
+                <span id="activeLocality">
+                    -
+                </span>
+
+            </p>
+
+
+            <p>
+
+                Triggered:
+
+                <span id="activeTriggeredAt">
+                    -
+                </span>
+
+            </p>
+
+
+            <button
+                id="resolveButton"
+            >
+                Resolve Emergency
+            </button>
+
+        </section>
+
+
+
+        <!-- =====================================
+     SOS HISTORY
+====================================== -->
+
+<section
+    id="sosHistorySection"
+    class="card"
+>
+
+    <h2>
+        SOS History
+    </h2>
+
+    <div id="sosHistoryList">
+
+        Loading SOS history...
+
+    </div>
+
+</section>
+
+
+    </main>
+
+
+
+    <!-- =========================================
+         ADD CONTACT MODAL
+    ========================================== -->
+
+    <div
+        id="contactModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+
+            <h2>
+                Add Emergency Contact
+            </h2>
+
+
+            <form id="contactForm">
+
+
+                <!-- NAME -->
+
+                <label for="contactName">
+
+                    Name
+
+                </label>
+
+
+                <input
+                    id="contactName"
+                    type="text"
+                    placeholder="Contact name"
+                    required
+                >
+
+
+
+                <!-- PHONE -->
+
+                <label for="contactPhone">
+
+                    Phone
+
+                </label>
+
+
+                <input
+                    id="contactPhone"
+                    type="text"
+                    placeholder="Phone number"
+                    required
+                >
+
+
+
+                <!-- RELATIONSHIP -->
+
+                <label for="contactRelationship">
+
+                    Relationship
+
+                </label>
+
+
+                <input
+                    id="contactRelationship"
+                    type="text"
+                    placeholder="Mother, Father, Friend, etc."
+                >
+
+
+
+                <!-- BUTTONS -->
+
+                <div class="modal-buttons">
+
+
+                    <button
+                        type="submit"
+                    >
+
+                        Save Contact
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="closeModalButton"
+                    >
+
+                        Cancel
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script
+        src="js/dashboard.js"
+    ></script>
+
+
+</body>
+
+</html>
