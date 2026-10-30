@@ -1,1253 +1,411 @@
 # SafeGuardian
 
-## Emergency Safety and SOS Management System
+## A Web-Based Emergency SOS and Email Notification System
 
-SafeGuardian is a web-based emergency safety system that allows authenticated users to trigger an SOS, share their current location with emergency contacts through email, manage emergency contacts, and maintain a history of emergency incidents.
+SafeGuardian is a browser-based emergency alert application designed to help authenticated users notify their registered emergency contacts during an emergency. The application allows users to manage emergency contacts, activate an SOS alert, share available location information, track incidents, and resolve incidents after password verification.
 
-The system is designed around a simple emergency workflow:
-
-```text
-Login
-  ↓
-Dashboard
-  ↓
-Trigger SOS
-  ↓
-Create Emergency Incident
-  ↓
-Notify Emergency Contacts
-  ↓
-Email Delivery
-  ↓
-Resolve SOS
-  ↓
-SOS History
-```
+The system uses a separate notification worker to process email notifications asynchronously.
 
 ---
 
-## Features
+## Repository
 
-### 🔐 User Authentication
+**GitHub repository:** https://github.com/VamsidharK06/SafeGuardian-AI
 
-- User login
-- Session-based authentication
-- Protected API endpoints
-- Password hashing using bcrypt
-- Logout functionality
+The project is organized across two branches:
 
----
+| Branch | Contents |
+|---|---|
+| `master` | Application source code |
+| `main` | Project documentation and academic materials |
 
-### 🚨 Emergency SOS
+- [View source code (`master`)](https://github.com/VamsidharK06/SafeGuardian-AI/tree/master)
+- [View documentation (`main`)](https://github.com/VamsidharK06/SafeGuardian-AI/tree/main)
 
-Users can trigger an emergency SOS from the dashboard.
-
-When an SOS is triggered, SafeGuardian:
-
-- Captures the user's current latitude and longitude
-- Stores the locality
-- Creates an emergency incident
-- Marks the incident as `ACTIVE`
-- Locks the active incident
-- Prevents multiple active SOS incidents for the same user
-- Creates notification records for emergency contacts
+The `main` branch is the repository's documentation starting point. Open the `master` branch to view the application source code.
 
 ---
 
-### 📍 Location Capture
+## Project Objectives
 
-SafeGuardian uses the browser's geolocation functionality to obtain the user's current location.
-
-The system stores:
-
-```text
-Latitude
-Longitude
-Locality
-```
-
-The location is converted into a Google Maps link for emergency notification.
-
-Example:
-
-```text
-https://www.google.com/maps?q=17.4963,78.3857
-```
+- Provide authenticated access to the emergency SOS application.
+- Allow users to add and manage registered emergency contacts.
+- Obtain the user's location through the browser Geolocation API when permission and device support are available.
+- Allow users to activate an SOS incident.
+- Send email alerts to registered emergency contacts.
+- Store SOS incidents and notification records in PostgreSQL.
+- Process email notifications asynchronously using a separate worker.
+- Allow users to resolve an active incident after password verification.
+- Display previous SOS incidents through the history feature.
 
 ---
 
-### 👥 Emergency Contacts
+## Main Features
 
-Users can manage their emergency contacts.
+### 1. User Authentication
+- User registration and login.
+- Password hashing using `bcrypt`.
+- Session-based authentication using Express Session.
 
-Each contact contains:
+### 2. Emergency Contact Management
+- Add and manage emergency contacts.
+- Use registered contacts as recipients for SOS email notifications.
 
-```text
-Name
-Phone
-Relationship
-Email
-```
+### 3. SOS Activation
+- Activate SOS using a three-second press-and-hold action.
+- Request the user's current location through the browser Geolocation API, subject to browser permission and device availability.
+- Submit the SOS request to the backend.
 
-Example:
+### 4. Email Notifications
+- Create notification records for registered emergency contacts.
+- Send emergency email alerts through Nodemailer and an SMTP service.
+- Include available location information and a Google Maps link in the email when coordinates are available.
 
-```text
-Mother
-9123456789
-Mother
-mother@example.com
-```
+### 5. Asynchronous Notification Worker
+- Run a separate Node.js worker to process pending notification records.
+- Update notification records according to the processing result.
+- Retry failed notification attempts up to the configured limit.
 
-Contacts are associated with the authenticated user.
-
----
-
-### 📧 Email Emergency Notifications
-
-SafeGuardian currently uses **email** for emergency notifications.
-
-When an SOS is triggered, an email notification is created for each emergency contact.
-
-The email contains:
-
-- Emergency alert
-- Location
-- Google Maps link
-- Trigger time
-- Locality
-- Emergency response message
-
-Example:
-
-```text
-SAFEGUARDIAN EMERGENCY ALERT
-
-Emergency alert triggered.
-
-Location:
-https://www.google.com/maps?q=17.4963,78.3857
-
-Time:
-2026-10-04T09:11:38.782Z
-
-Nearby locality:
-Current location
-
-Please respond immediately.
-```
-
----
-
-### ⚙️ Background Notification Worker
-
-Email delivery is handled by a separate background worker.
-
-The application first creates notification records in PostgreSQL:
-
-```text
-PENDING
-```
-
-The notification worker then processes them and sends the emails.
-
-```text
-SOS
- ↓
-Notification Record
- ↓
-PENDING
- ↓
-Notification Worker
- ↓
-SMTP
- ↓
-SENT
-```
-
-If delivery fails:
-
-```text
-PENDING
- ↓
-FAILED
-```
-
-The worker currently checks for pending notifications every **5 seconds**.
-
----
-
-### 📊 Notification Tracking
-
-Each notification stores its processing information.
-
-Important fields include:
-
-```text
-id
-sos_id
-contact_id
-message
-status
-attempts
-sent_at
-created_at
-channel
-```
-
-Possible notification states:
-
-```text
-PENDING
-SENT
-FAILED
-```
-
-This allows SafeGuardian to track notification processing.
-
----
-
-### 🔑 Password-Protected SOS Resolution
-
-An active SOS cannot be resolved without password verification.
-
-The user must provide their account password.
-
-SafeGuardian verifies the password using bcrypt before resolving the emergency.
-
-```text
-Active SOS
-    ↓
-Resolve Emergency
-    ↓
-Enter Password
-    ↓
-Password Verification
-    ↓
-Correct Password
-    ↓
-RESOLVED
-```
-
-After successful resolution:
-
-```text
-status = RESOLVED
-locked = FALSE
-resolved_at = timestamp
-```
-
-An incorrect password does not resolve the SOS.
-
----
-
-### 📜 SOS History
-
-SafeGuardian maintains a history of previous SOS incidents.
-
-The dashboard can display:
-
-- SOS ID
-- Status
-- Locality
-- Latitude
-- Longitude
-- Triggered time
-- Resolved time
-- Map location
-
-Resolved incidents remain stored in PostgreSQL.
+### 6. Incident Management
+- Store SOS incidents in PostgreSQL.
+- Maintain incident states such as `ACTIVE` and `RESOLVED`.
+- Require password verification before resolving an active incident.
+- Display previous incidents in SOS history.
 
 ---
 
 ## Technology Stack
 
-### Frontend
-
-- HTML5
-- CSS3
-- JavaScript
-- Browser Geolocation API
-
-### Backend
-
-- Node.js
-- Express.js
-- REST APIs
-- Express Session
-- bcrypt
-
-### Database
-
-- PostgreSQL
-
-### Email
-
-- Nodemailer
-- SMTP
+| Component | Technology |
+|---|---|
+| Frontend | HTML, CSS, JavaScript |
+| Backend | Node.js, Express.js |
+| Database | PostgreSQL |
+| Database connectivity | Node.js `pg` package |
+| Authentication | Express Session, bcrypt |
+| Email notifications | Nodemailer, SMTP |
+| Location | Browser Geolocation API |
+| Background processing | Node.js notification worker |
+| Version control | Git and GitHub |
 
 ---
 
-# Project Architecture
+## System Workflow
+
+1. The user logs in to SafeGuardian.
+2. The user manages their registered emergency contacts.
+3. During an emergency, the user activates the SOS button by pressing and holding it for three seconds.
+4. The browser requests the user's location, if location permission and device support are available.
+5. The frontend sends the SOS request to the Express backend.
+6. The backend validates the request and checks for an existing active SOS incident.
+7. The backend creates the incident and pending notification records in a PostgreSQL transaction.
+8. The backend returns a response to the frontend.
+9. The separate notification worker retrieves pending notification records.
+10. The worker sends email alerts through Nodemailer and SMTP, then updates the notification status.
+11. The user can later resolve the incident after password verification and view the incident history.
+
+### Simplified Architecture
 
 ```text
-                    ┌─────────────────────┐
-                    │   SafeGuardian UI   │
-                    │    HTML/CSS/JS      │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │    Express Server   │
-                    │       Node.js       │
-                    └──────────┬──────────┘
-                               │
-              ┌────────────────┼────────────────┐
-              │                │                │
-              ▼                ▼                ▼
-       ┌────────────┐   ┌────────────┐   ┌────────────┐
-       │    Auth    │   │    SOS     │   │  Contacts  │
-       │   Routes   │   │   Routes   │   │   Routes   │
-       └────────────┘   └─────┬──────┘   └────────────┘
-                              │
-                              ▼
-                    ┌─────────────────────┐
-                    │     PostgreSQL      │
-                    │                     │
-                    │ users               │
-                    │ emergency_contacts  │
-                    │ sos_incidents       │
-                    │ notifications       │
-                    └──────────┬──────────┘
-                               │
-                               │ PENDING
-                               ▼
-                    ┌─────────────────────┐
-                    │ Notification Worker │
-                    │       Node.js       │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │     SMTP Server     │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │ Emergency Contacts  │
-                    │       Email         │
-                    └─────────────────────┘
-```
-
----
-
-# Project Structure
-
-```text
-safeguardian/
-│
-├── config/
-│   └── db.js
-│
-├── middleware/
-│   └── authMiddleware.js
-│
-├── routes/
-│   ├── auth.js
-│   ├── contacts.js
-│   ├── sos.js
-│   └── ...
-│
-├── workers/
-│   └── notificationWorker.js
-│
-├── public/
-│   ├── login.html
-│   ├── dashboard.html
-│   │
-│   ├── css/
-│   │   ├── dashboard.css
-│   │   └── ...
-│   │
-│   └── js/
-│       ├── dashboard.js
-│       └── ...
-│
-├── .env
-├── .gitignore
-├── package.json
-├── package-lock.json
-└── server.js
-```
-
-> The exact structure may vary depending on the current project files.
-
----
-
-# Database Structure
-
-SafeGuardian uses PostgreSQL.
-
-The main tables are:
-
-```text
-users
-emergency_contacts
-sos_incidents
-notifications
+                 +----------------------+
+                 |       User           |
+                 +----------+-----------+
+                            |
+                            v
+                 +----------------------+
+                 |   Web Frontend       |
+                 |   HTML, CSS, JS      |
+                 +----------+-----------+
+                            |
+                     HTTP Requests
+                            |
+                            v
+                 +----------------------+
+                 |   Node.js / Express  |
+                 |      Backend         |
+                 +----------+-----------+
+                            |
+                            v
+                 +----------------------+
+                 |     PostgreSQL       |
+                 | Users, Contacts,     |
+                 | Incidents, Alerts    |
+                 +----------+-----------+
+                            |
+                  Pending notifications
+                            |
+                            v
+                 +----------------------+
+                 | Notification Worker |
+                 |      Node.js         |
+                 +----------+-----------+
+                            |
+                            v
+                 +----------------------+
+                 |   Nodemailer / SMTP  |
+                 +----------+-----------+
+                            |
+                            v
+                 +----------------------+
+                 | Emergency Contacts   |
+                 |   Email Alerts       |
+                 +----------------------+
 ```
 
 ---
 
-## Users
+## Project Organization
 
-Stores registered user information.
-
-Typical fields:
+The following is a logical overview of the application components. Refer to the `master` branch for the exact current source tree.
 
 ```text
-id
-name
-email
-phone
-password_hash
+SafeGuardian/
+|
++-- public/
+|   +-- index.html
+|   +-- register.html
+|   +-- dashboard.html
+|   +-- css/
+|   |   +-- style.css
+|   |   +-- dashboard.css
+|   +-- js/
+|       +-- login.js
+|       +-- register.js
+|       +-- dashboard.js
+|
++-- config/
+|   +-- db.js
+|
++-- middleware/
+|   +-- authMiddleware.js
+|
++-- routes/
+|   +-- Authentication and application routes
+|
++-- workers/
+|   +-- notificationWorker.js
+|
++-- services/
+|   +-- Notification service
+|
++-- database/
+|   +-- schema.sql
+|
++-- server.js
++-- package.json
++-- .env.example
++-- README.md
 ```
 
 ---
 
-## Emergency Contacts
+## Requirements
 
-Stores emergency contacts belonging to users.
+Before running the application, make sure the following are installed:
 
-```text
-id
-user_id
-name
-phone
-relationship
-email
-created_at
-```
+- Node.js and npm.
+- PostgreSQL.
+- A modern web browser.
+- Git (if cloning the repository).
+- An SMTP account and its configuration for sending email notifications.
 
-Relationship:
-
-```text
-users
-   │
-   └─── emergency_contacts
-```
-
-One user can have multiple emergency contacts.
+An internet connection is required for SMTP email delivery and for obtaining browser location where the browser/device requires it.
 
 ---
 
-## SOS Incidents
+## Installation and Setup
 
-Stores emergency incidents.
-
-```text
-id
-user_id
-latitude
-longitude
-locality
-triggered_at
-resolved_at
-status
-locked
-```
-
-Example active incident:
-
-```text
-id: 12
-user_id: 1
-latitude: 17.4963
-longitude: 78.3857
-locality: Current location
-status: ACTIVE
-locked: true
-```
-
-After resolution:
-
-```text
-status: RESOLVED
-locked: false
-resolved_at: timestamp
-```
-
----
-
-## Notifications
-
-Stores notification jobs created during an SOS.
-
-```text
-id
-sos_id
-contact_id
-message
-status
-attempts
-sent_at
-created_at
-channel
-```
-
-Current notification channel:
-
-```text
-EMAIL
-```
-
-Example:
-
-```text
-id: 20
-sos_id: 6
-contact_id: 5
-channel: EMAIL
-status: SENT
-attempts: 1
-sent_at: timestamp
-```
-
----
-
-# Requirements
-
-Install the following before running the project:
-
-- Node.js
-- npm
-- PostgreSQL
-- SMTP-enabled email account
-
----
-
-# Installation
-
-Clone the project:
+### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/VamsidharK06/SafeGuardian-AI.git
+cd SafeGuardian-AI
 ```
 
-Move into the project:
+The application source code is maintained in the `master` branch. If the clone checks out another default branch, switch to `master`:
 
 ```bash
-cd safeguardian
+git checkout master
 ```
 
-Install dependencies:
+### 2. Install dependencies
+
+From the application source directory containing `package.json`, run:
 
 ```bash
 npm install
 ```
 
----
+### 3. Configure PostgreSQL
 
-# PostgreSQL Setup
+1. Start PostgreSQL.
+2. Create a database for SafeGuardian.
+3. Configure the database connection values in the environment file.
+4. Apply the database setup script supplied with the project, if applicable.
 
-Create the database:
+Use the database name and schema expected by the application's current configuration.
 
-```sql
-CREATE DATABASE safeguardian;
-```
+### 4. Configure environment variables
 
-Connect to the database:
+Create a local `.env` file using the project's example configuration as a reference. Set the values required by the application, including database connection details, session configuration, and SMTP credentials.
 
-```bash
-psql -U postgres -d safeguardian
-```
-
-Create the required tables using the project's database schema.
-
-Check available tables:
-
-```sql
-\dt
-```
-
----
-
-# Environment Variables
-
-Create a `.env` file in the project root.
-
-Example:
+Example placeholders:
 
 ```env
-PORT=3000
-
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=safeguardian
-DB_USER=postgres
+DB_NAME=your_database_name
+DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 
-SESSION_SECRET=your_session_secret
+SESSION_SECRET=replace_with_a_long_random_secret
 
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=465
-EMAIL_SECURE=true
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASSWORD=your_application_password
-EMAIL_FROM=your_email@gmail.com
+SMTP_HOST=your_smtp_host
+SMTP_PORT=your_smtp_port
+SMTP_USER=your_smtp_username
+SMTP_PASSWORD=your_smtp_password
 ```
 
-### Important
+**Important:** Environment variable names can differ according to the application's configuration. Check the source code and `.env.example` in the `master` branch and use the exact names expected by the project.
 
-Never commit `.env` to Git.
+Never commit `.env`, database passwords, session secrets, or SMTP credentials to GitHub.
 
-Add:
+### 5. Start the backend
 
-```gitignore
-.env
-node_modules/
-cookies.txt
-```
-
-to `.gitignore`.
-
-For Gmail SMTP, use an **App Password** when required by the account.
-
----
-
-# Running SafeGuardian
-
-SafeGuardian has two processes:
-
-```text
-Main Server
-     +
-Notification Worker
-```
-
-Both need to be running for complete SOS email functionality.
-
----
-
-## 1. Start PostgreSQL
-
-Make sure PostgreSQL is running.
-
----
-
-## 2. Start the Main Server
-
-From the project directory:
+From the directory containing the backend `package.json`, run the start command defined in the project. For example:
 
 ```bash
-node server.js
+npm start
 ```
 
-The application should be available at:
-
-```text
-http://localhost:3000
-```
-
-Open:
-
-```text
-http://localhost:3000/dashboard.html
-```
-
----
-
-## 3. Start the Notification Worker
-
-Open another terminal.
-
-Navigate to the project:
+If the project uses a development script, it may be started with:
 
 ```bash
-cd C:\Users\vamsi\safeguardian
+npm run dev
 ```
 
-Run:
+Use the scripts listed in the project's `package.json`.
+
+### 6. Start the notification worker
+
+Open a separate terminal in the backend project directory and run the worker using the script or command defined by the project. For example:
 
 ```bash
-node workers\notificationWorker.js
+node workers/notificationWorker.js
 ```
 
-Expected output:
+Keep the worker running while testing email notifications.
 
-```text
-SafeGuardian Notification Worker started
-Checking notifications every 5 seconds
-Email SMTP connection verified
-```
+### 7. Open the application
+
+Open the frontend using the serving method configured by the project. Sign in with a registered account and test the dashboard and SOS workflow.
 
 ---
 
-# Application Workflow
+## Notification and Incident Status
 
-## Login
+The application uses incident and notification states to track its workflow.
 
-The user logs in using their account credentials.
+### Incident status
 
-```text
-Login
-  ↓
-Session Created
-  ↓
-Dashboard
-```
+| Status | Meaning |
+|---|---|
+| `ACTIVE` | The SOS incident is active. |
+| `RESOLVED` | The incident has been resolved by the user. |
 
----
+### Notification status
 
-## Add Emergency Contacts
+| Status | Meaning |
+|---|---|
+| `PENDING` | The notification is waiting to be processed. |
+| `SENT` | The email notification was sent successfully. |
+| `FAILED` | The notification attempt failed. |
 
-The user can add contacts from the dashboard.
-
-Each contact can have:
-
-```text
-Name
-Phone
-Relationship
-Email
-```
+The notification worker processes pending records and applies the retry behavior configured in the application.
 
 ---
 
-## Trigger SOS
+## Testing
 
-The user triggers the SOS button.
+The core application workflow was checked through functional testing in a controlled environment.
 
-SafeGuardian:
+The checks included:
 
-1. Gets the current location.
-2. Checks whether another SOS is already active.
-3. Creates the incident.
-4. Sets it to `ACTIVE`.
-5. Locks the incident.
-6. Creates email notification records.
+1. User login.
+2. Dashboard and location display.
+3. Emergency contact management.
+4. SOS activation.
+5. Email notification processing.
+6. Rejection of an incorrect password during incident resolution.
+7. Successful incident resolution after correct password verification.
+8. SOS history retrieval.
+9. Checks for an already active incident.
 
----
-
-## Process Notifications
-
-The worker finds:
-
-```text
-status = PENDING
-```
-
-and sends the email.
-
-Successful delivery changes the record to:
-
-```text
-status = SENT
-```
+These checks demonstrate the tested application workflow. They should not be interpreted as production-scale load, security, or reliability testing.
 
 ---
 
-## Resolve SOS
+## Security Considerations
 
-The user selects:
+- Passwords are hashed using `bcrypt`.
+- Protected application routes use session-based authentication.
+- Database access is handled by the backend.
+- SMTP credentials and other secrets should be stored in environment variables.
+- Incident resolution requires password verification.
+- Browser location access depends on user permission and browser/device support.
 
-```text
-Resolve Emergency
-```
-
-The system requests the user's password.
-
-After successful verification:
-
-```text
-ACTIVE → RESOLVED
-```
+Do not publish real user credentials, emergency contact details, phone numbers, email addresses, or precise location coordinates in the repository or screenshots.
 
 ---
 
-## View History
+## Current Scope and Limitations
 
-The resolved incident remains available in:
-
-```text
-SOS History
-```
-
----
-
-# API Endpoints
-
-The application provides REST endpoints for authentication, contacts, and SOS management.
-
-## Authentication
-
-```http
-POST /api/auth/login
-```
-
-Used to authenticate the user.
+- SafeGuardian is a web-based prototype for emergency SOS and email notification.
+- Location sharing depends on browser permission and device availability.
+- Email delivery depends on the configured SMTP service and network availability.
+- The application does not itself guarantee that a recipient has read or acted on an email.
+- The current notification workflow described here is email-based; SMS and WhatsApp delivery are not included as implemented features.
+- The project is not an automatic emergency detection system and does not automatically contact police or other emergency services.
 
 ---
 
-## Contacts
+## Future Enhancements
 
-```http
-GET /api/contacts
-```
+Possible future improvements include:
 
-Returns the authenticated user's emergency contacts.
+- SMS and messaging-platform notifications.
+- A dedicated mobile application.
+- Trusted-contact acknowledgement of alerts.
+- Improved notification delivery monitoring.
+- Additional accessibility and responsive design improvements.
+- Optional continuous location sharing with user consent.
+- Integration with authorized emergency services, subject to applicable permissions and regulations.
+- Broader security, performance, and reliability testing.
 
-```http
-POST /api/contacts
-```
-
-Creates an emergency contact.
-
-```http
-DELETE /api/contacts/:id
-```
-
-Deletes an emergency contact.
+These are proposed enhancements and are not presented as current implemented features.
 
 ---
 
-## SOS
+## Academic Project
 
-```http
-POST /api/sos
-```
+**Project title:** SafeGuardian: A Web-Based Emergency SOS and Email Notification System
 
-Creates an emergency SOS.
+**Team:** SafeGuardian Team
 
-```http
-GET /api/sos/active
-```
+**Department:** Computer Science and Engineering
 
-Returns the user's current active SOS, if one exists.
-
-```http
-POST /api/sos/:id/resolve
-```
-
-Resolves an active SOS after password verification.
-
-```http
-GET /api/sos/history
-```
-
-Returns the user's previous SOS incidents.
+**Degree:** Bachelor of Technology
 
 ---
 
-# Example SOS Request
+## Contributors
 
-```json
-{
-  "latitude": 17.4963,
-  "longitude": 78.3857,
-  "locality": "Current location"
-}
-```
+- K. Vamsidhar
+- K.V.S. Jaswanth
+- B. Akhil Varma
 
 ---
 
-# Example SOS Response
+## License
 
-```json
-{
-  "message": "SOS activated successfully",
-  "sos": {
-    "id": 12,
-    "status": "ACTIVE",
-    "locked": true,
-    "latitude": "17.4963",
-    "longitude": "78.3857",
-    "locality": "Current location"
-  },
-  "notificationsCreated": 3
-}
-```
-
----
-
-# Example Resolution Request
-
-```json
-{
-  "password": "your-password"
-}
-```
-
-Successful response:
-
-```json
-{
-  "message": "SOS resolved successfully",
-  "sos": {
-    "id": 12,
-    "status": "RESOLVED",
-    "locked": false
-  }
-}
-```
-
----
-
-# Testing
-
-## Authentication
-
-Test:
-
-- Valid login
-- Invalid password
-- Invalid user
-- Accessing protected endpoints without login
-- Logout
-
----
-
-## Emergency Contacts
-
-Test:
-
-- Add contact
-- View contacts
-- Delete contact
-- Contact email
-- Multiple contacts
-
----
-
-## SOS
-
-Test:
-
-- Trigger SOS
-- Capture location
-- Create active incident
-- Prevent duplicate active SOS
-- Retrieve active SOS
-- Resolve SOS
-- View SOS history
-
----
-
-## Resolution
-
-Test:
-
-```text
-Correct password
-        ↓
-RESOLVED
-```
-
-```text
-Incorrect password
-        ↓
-Rejected
-```
-
-```text
-Missing password
-        ↓
-Rejected
-```
-
----
-
-## Email Notifications
-
-Test:
-
-```text
-SOS Trigger
-    ↓
-PENDING notification
-    ↓
-Notification Worker
-    ↓
-SMTP
-    ↓
-Email received
-    ↓
-SENT
-```
-
-Verify:
-
-- Recipient email
-- Email subject
-- Emergency message
-- Location link
-- Locality
-- Timestamp
-- Notification status
-
----
-
-# Database Verification
-
-## Check SOS Incidents
-
-```sql
-SELECT
-    id,
-    status,
-    locked,
-    triggered_at,
-    resolved_at
-FROM sos_incidents
-ORDER BY id DESC;
-```
-
----
-
-## Check Emergency Contacts
-
-```sql
-SELECT
-    id,
-    name,
-    phone,
-    relationship,
-    email
-FROM emergency_contacts
-ORDER BY id;
-```
-
----
-
-## Check Notifications
-
-```sql
-SELECT
-    id,
-    sos_id,
-    contact_id,
-    channel,
-    status,
-    attempts,
-    sent_at
-FROM notifications
-ORDER BY id DESC;
-```
-
----
-
-# Security
-
-SafeGuardian includes:
-
-- Session-based authentication
-- Password hashing
-- bcrypt password verification
-- Protected API routes
-- User-specific SOS access
-- User-specific emergency contacts
-- Password-protected SOS resolution
-- PostgreSQL foreign-key relationships
-- Environment variables for sensitive configuration
-
-Sensitive configuration such as database passwords, session secrets, and email credentials should never be committed to the repository.
-
----
-
-# Current Notification Channel
-
-The current implementation uses:
-
-```text
-EMAIL
-```
-
-The system does **not** currently depend on WhatsApp or SMS for emergency notification delivery.
-
-This keeps the current implementation focused on reliable email-based emergency communication.
-
----
-
-# Current Project Status
-
-```text
-User Authentication          ✓
-Session Management           ✓
-Dashboard                    ✓
-Emergency Contacts           ✓
-Contact Email Support        ✓
-Location Capture             ✓
-SOS Trigger                  ✓
-Active SOS Detection         ✓
-Duplicate SOS Prevention     ✓
-SOS Locking                  ✓
-Password-Protected Resolve   ✓
-SOS History                  ✓
-Notification Records         ✓
-Notification Worker          ✓
-SMTP Configuration           ✓
-Real Email Delivery          ✓
-Notification Status Tracking ✓
-Notification Attempt Tracking✓
-```
-
----
-
-# Troubleshooting
-
-## Server does not start
-
-Check:
-
-```bash
-node server.js
-```
-
-Make sure:
-
-- PostgreSQL is running
-- `.env` is configured
-- Dependencies are installed
-
-Run:
-
-```bash
-npm install
-```
-
----
-
-## Database connection error
-
-Verify:
-
-```env
-DB_HOST
-DB_PORT
-DB_NAME
-DB_USER
-DB_PASSWORD
-```
-
-Then test PostgreSQL separately:
-
-```bash
-psql -U postgres -d safeguardian
-```
-
----
-
-## Email is not being sent
-
-Make sure the notification worker is running:
-
-```bash
-node workers\notificationWorker.js
-```
-
-Check that the worker reports:
-
-```text
-Email SMTP connection verified
-```
-
-Also verify the SMTP credentials in `.env`.
-
----
-
-## Notifications remain PENDING
-
-Check whether the worker is running.
-
-Then inspect:
-
-```sql
-SELECT
-    id,
-    status,
-    attempts,
-    channel
-FROM notifications
-ORDER BY id DESC;
-```
-
----
-
-## SOS cannot be resolved
-
-Verify:
-
-- The SOS belongs to the logged-in user.
-- The SOS status is `ACTIVE`.
-- The correct account password is being supplied.
-
-Check:
-
-```sql
-SELECT
-    id,
-    user_id,
-    status,
-    locked
-FROM sos_incidents
-ORDER BY id DESC;
-```
-
----
-
-# Typical Complete Run
-
-A complete local run looks like:
-
-```text
-PostgreSQL
-    ↓
-Node.js Server
-    ↓
-Login
-    ↓
-Dashboard
-    ↓
-Add Emergency Contacts
-    ↓
-Trigger SOS
-    ↓
-SOS = ACTIVE
-    ↓
-Notifications = PENDING
-    ↓
-Notification Worker
-    ↓
-Email Sent
-    ↓
-Notifications = SENT
-    ↓
-Enter Password
-    ↓
-SOS = RESOLVED
-    ↓
-SOS appears in History
-```
-
----
-
-# License
-
-This project is developed for educational and software development purposes.
-
----
-
-# SafeGuardian
-
-**Trigger. Notify. Resolve. Remember.**
-
-A simple emergency workflow designed to keep the complete SOS lifecycle organized:
-
-```text
-TRIGGER
-   ↓
-NOTIFY
-   ↓
-RESOLVE
-   ↓
-HISTORY
-```
+No open-source license has been specified for this repository. Contact the project contributors before reusing or redistributing the source code.
